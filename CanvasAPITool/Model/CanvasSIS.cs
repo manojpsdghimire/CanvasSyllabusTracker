@@ -7,9 +7,9 @@ namespace CanvasAPITool.Model
 {
     public class CanvasSIS
     {
-        protected const string _access_token = "9218~FkwyEMJfOf49K2OS9h6AWXU4WJ4owlsbxvyQrNBr9a8ohkpRQ95Yu3BRlgRc5p5c";
-        protected const string _account_id = "1";
-        protected const string _base_url = "https://westminster-mo.instructure.com/api/v1/";
+        protected const string _access_token = "CANVAS ACCESS TOKE";
+        protected const string _account_id = "ACCOUNT ID";
+        protected const string _base_url = "https://domain/api/v1/";
 
         public string account_id { get; set; }
         public string access_token { get; set; }
