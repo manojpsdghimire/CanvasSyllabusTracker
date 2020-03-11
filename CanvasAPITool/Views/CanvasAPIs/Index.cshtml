@@ -1,0 +1,334 @@
+﻿@using X.PagedList;
+@model X.PagedList.IPagedList<CanvasAPITool.Model.CanvasAPI>
+@using X.PagedList.Mvc.Core;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="google" content="notranslate">
+        <meta http-equiv="Content-Language" content="en" />
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>USU Syllabus Tracker</title>
+        <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="resources/bootstrap/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="resources/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="resources/css/syllabus.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <script type="text/javascript" language="javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        @* For Google Graph  display t*@
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        @* For Google Graph  display the courses wiht and without syllabus on graph*@
+        <script type="text/javascript">
+            google.charts.load('current', { 'packages': ['bar'] });
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var syllabus_data = google.visualization.arrayToDataTable([
+                    ['Course',  'Total Active Courses', 'With Syllabus', 'Without Syllabus'],
+                    ['Courses Syllabus Status', @ViewBag.Total, @ViewBag.hasSyllabusTotal,  @ViewBag.noSyllabusTotal]
+                ]);
+
+                var syllabus_options = {
+                    chart: {
+                        title: 'Canvas Courses',
+                        subtitle: 'Active Courses with Syllabus Status',
+
+                    },
+                    colors: ['#4285F4','#3e8410', '#DB4437']
+                };
+
+                var Syllabus_chart = new google.charts.Bar(document.getElementById('syllabus_material'));
+
+                Syllabus_chart.draw(syllabus_data, google.charts.Bar.convertOptions(syllabus_options ));
+            }
+        </script>
+
+        @* Line chart Per Department *@
+        <script type="text/javascript">
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart_department);
+
+        function drawChart_department() {
+
+        var department_data = [
+            [{ label: 'Department', type: 'string' },
+                { label: 'All Active Courses', type: 'number' },
+            { label: 'Uses', type: 'number' },
+            { label: 'Does not Uses', type: 'number' }
+
+            ]
+        ];
+
+            //loop through each department
+
+
+            department_data.push(["Syllabus", @ViewBag.Total, @ViewBag.hasSyllabusTotal,@ViewBag.noSyllabusTotal ]);
+            department_data.push(["Grade Book", @ViewBag.Total, @ViewBag.usesgradeBook,@ViewBag.nousegradebook ]);
+            department_data.push(["Attendence", @ViewBag.Total, @ViewBag.usesattendence,@ViewBag.nousesattendence ]);
+
+
+
+         var data = google.visualization.arrayToDataTable(department_data);
+        var options = {
+          chart: {
+            title: 'Active Canvas Courses',
+            subtitle: 'Course Analysis',
+            },
+             colors: ['#4285F4','#3e8410', '#DB4437'],
+            bars: 'vertical', // Required for Material Bar Charts.
+          vAxis: {format: 'decimal'},
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+            }
+
+        </script>
+
+
+        @* chart per department *@
+        <script type="text/javascript">
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart_department_courses);
+
+        function drawChart_department_courses() {
+
+       var department_data = [
+           [{ label: 'Department', type: 'string' },
+            { label: 'Total Courses', type: 'number' },
+            { label: 'Using GradeBook', type: 'number' },
+            { label: 'Not Using Gradebook', type: 'number' },
+            { label: 'Has Syllabus', type: 'number' },
+            { label: 'Does not have Syllabus', type: 'number' },
+            { label: 'Using Attendence', type: 'number' },
+            { label: 'Not Using Attendence', type: 'number' }
+            ]
+        ];
+
+           
+
+            var list = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.department_course) as String);
+               
+
+             //dding for all active courses
+  //department_data.push(["All Courses",parseInt(@ViewBag.Total), @ViewBag.usesgradeBook,@ViewBag.nousegradebook,@ViewBag.hasSyllabusTotal,@ViewBag.noSyllabusTotal,@ViewBag.usesattendence,@ViewBag.nousesattendence]);
+
+            //looping through the ViewBag list
+            for (var i = 0; i < list.length; i++) {
+
+                var department = list[i].ItemId;
+                var has_syllabus =list[i].hasSyllabus; 
+                var no_syllabus =   list[i].noSyllabus;
+                var uses_gradebook = list[i].usesgradebook;
+                var no_gradebook = list[i].nousesgradebook;
+                var uses_attendence = list[i].usesAttendence;
+                var no_attendance = list[i].nousesAttendence;
+                var _total = list[i].Total;
+
+               department_data.push([department,_total,uses_gradebook, no_gradebook, has_syllabus, no_syllabus, uses_attendence, no_attendance]);
+            }
+           
+
+         var data = google.visualization.arrayToDataTable(department_data);
+        var options = {
+            chart: {
+              title: 'Active Canvas Courses',
+            subtitle: 'Course Analysis per Department',
+            },
+            legend: {position: 'top', maxLines: 3},
+            colors: ['#3366CC', '#DC3912','#FF9900', '#109618','#990099', '#0099C6','#DD4477', ],
+            bars: 'vertical', // Required for Material Bar Charts.
+          vAxis: {format: 'decimal'},
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('chart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+            }
+
+        </script>
+    </head>
+    <body style="padding:0px;">
+        <div class="container-fluid">
+            <div class="heading">
+                <div class="alert alert-dismissible alert-primary">
+                    <h1 style="font-weight: bold; text-align:center">
+                        Canvas Course Syllabus Tracker
+                    </h1>
+                    @*<p style="text-align:center;">
+                        This tool will display all active courses within Canvas that have student enrollments.
+                    </p>*@
+                </div>
+               
+            </div>
+        </div>
+        <br />
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <br />
+                @using (Html.BeginForm(FormMethod.Post))
+                {<div class="container-fluid" style="padding-left: 15px; align-self:center;">
+                        <div class="row">
+                            <div class="col-xs-5th-1 col-sm-3" style="align-content:center;">
+                                @Html.DropDownList("Terms", (IEnumerable<SelectListItem>)ViewBag.Terms, "Select Terms", htmlAttributes: new { @class = "form-control" })
+                            </div>
+                            <div class="col-xs-5th-1 col-sm-3" style="align-content:center;">
+                                @Html.DropDownList("syllabus", (IEnumerable<SelectListItem>)ViewBag.Syllabus, "Select Syllabus", htmlAttributes: new { @class = "form-control" })
+                            </div>
+                            <div class="col-xs-5th-1 col-sm-3" style="align-content:center;">
+                                @Html.DropDownList("departments", (IEnumerable<SelectListItem>)ViewBag.Departments, "Select Department", htmlAttributes: new { @class = "form-control" })
+                            </div>
+
+                            <div class="col-xs-5th-1 col-sm-3" style="align-content:center;">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Search" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                }
+                <br />
+            </div>
+        </div>
+        <hr />
+        <div class="scrollable ">
+            <div id="chart_material" style="width: 2000px; height: 500px; "></div>
+        </div>
+        <hr />
+        <br />
+        <div class="alert alert-success" style="text-align:center;">
+            <strong style="text-align:center;">All Active Canvas Courses List</strong>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="container-fluid" style="padding-left: 15px;">
+                    <div class="row">
+
+                        @foreach (var item in Model)
+                        {
+
+                        @*Gradebook index*@
+                        <div class="col-sm-4">
+
+
+                            @if (item.UsesGradeBook.ToUpper() == "FALSE")
+                {
+                            <i style="font-size:12px;color:darkorange;" class='fa'>&#xf06a;</i>
+                }
+                else
+                {
+                            <i style="font-size:12px;color:white;visibility: hidden;" class='fa'>&#xf06a;</i>
+                }
+
+
+                            @*attendence index*@
+
+                            @if (item.UsesAttendence.ToUpper() == "FALSE")
+                {
+                            <i style="font-size:12px;color:red;" class='fa'>&#xf00d;</i>
+                }
+                else
+                {
+                            <i style="font-size:12px;color:white;visibility: hidden;" class='fa'>&#xf00d;</i>
+                }
+
+
+
+                            @*Course names*@
+
+                        <i>
+                            @if (item.HasSyllabus.ToUpper() == "FALSE")
+                {
+                    if (@item.Name.Length >= 40)
+                    {
+                            <span class="badge badge-secondary"> @item.Name.Substring(0, 40)</span>
+                    }
+                    else
+                    {
+                            <span class="badge badge-secondary"> @item.Name</span>
+
+                    }
+
+                }
+                else
+
+                {
+                    if (@item.Name.Length >= 40)
+                    {
+                            <span class="badge badge-light">
+                                @Html.ActionLink(item.Name.Substring(0, 40), "getCourseSyllabus", new { id = item.Id }, new { target = "_blank", item.Name })
+                            </span>
+                    }
+                    else
+                    {
+                            <span class="badge badge-light">
+                                @Html.ActionLink(item.Name, "getCourseSyllabus", new { id = item.Id }, new { target = "_blank", item.Name })
+                            </span>
+                    }
+                }
+
+                        </i>
+                        </div>
+
+
+                            }
+                    </div>
+                </div>
+
+                <br />
+
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                <ul class="pagination">
+                    @Html.PagedListPager(Model, page => Url.Action("Index",
+               new { Terms = ViewBag.Term, syllabus = ViewBag.Syll, departments = ViewBag.Depart, page, pgSize = ViewBag.psize }))
+                </ul>
+
+                <br />
+
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>NOTE:</strong>
+                    <ul>
+                        <li>
+                            <i style="font-size:12px;color:darkorange;" class='fa'>&#xf06a;</i>&nbsp; Courses not using Canvas Grade Book.
+                        </li>
+                        <li>
+                            <i style="font-size:12px;color:red;" class='fa'>&#xf00d;</i>&nbsp; Courses not using Canvas Attendence.
+                        </li>
+                        <li>
+                            <i class="badge badge-secondary">&nbsp;</i>&nbsp; Courses do not have Syllabus.
+                        </li>
+                    </ul>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+
+<br />
+
+<style>
+   
+
+    div.scrollable {
+       
+        overflow: auto;
+    }
+    div.b {
+  word-wrap: break-word;
+}
+
+  
+</style>

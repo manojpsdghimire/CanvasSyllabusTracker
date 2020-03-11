@@ -1,0 +1,28 @@
+﻿@model IEnumerable<CanvasAPITool.Model.Courses_Documents>
+
+
+@{
+    ViewData["Title"] = ViewBag.name;
+}
+
+
+<hr />
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div>
+            <dl class="row">
+               @Html.Raw( ViewBag.Syllabus)
+               
+            </dl>
+        </div>
+
+   
+        <a asp-action="Index">Back to Courses</a>
+
+    </div>
+</div>
+<a href="http://wcmo.edu/" target="_blank" title="CIDI Website">
+    <img src="https://www.wcmo.edu/marketing/brand-standards/files/blue-wc-logo-horizontal.jpg" width="250">
+</a>
