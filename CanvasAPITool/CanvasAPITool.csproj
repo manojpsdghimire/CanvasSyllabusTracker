@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.Words" Version="20.3.0" />
+    <PackageReference Include="hiqpdf" Version="11.4.0" />
+    <PackageReference Include="hiqpdf.free" Version="11.4.0" />
+    <PackageReference Include="itext7.pdfhtml" Version="2.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Nancy" Version="2.0.0" />
+    <PackageReference Include="NReco.PdfGenerator.LT" Version="1.1.17" />
+    <PackageReference Include="PDF.Core" Version="2020.0.0" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="19.2.0" />
+    <PackageReference Include="Spire.Doc" Version="8.3.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="WkHtmlToPdf" Version="1.0.2" />
+    <PackageReference Include="WordToPDF" Version="1.0.0" />
+    <PackageReference Include="X.PagedList" Version="7.9.0" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <NativeLibs Remove="Model\Canvas_Courses.cs" />
+  </ItemGroup>
+
+
+
+</Project>
